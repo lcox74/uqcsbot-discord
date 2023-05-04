@@ -201,16 +201,19 @@ your best snails against the best of your rivals.
         to join, but this command allows you to select your snails while the
         button only picks your snails from your default racer (`set_racer`).
 
-- `race [ 1m | 2m | 5m | 10m ] [snail]`:
+- `race [ 1m | 2m | 5m | 10m ] [snail] [dont-fill]`:
         This will open a race for people to join. You will automatically be
         apart of the race. There are **4 race types** which are the race lengths
         in meters. If you want to use a specific snail instead of using your
         default snail (`set_racer`) you can optionally add your snail here. This
         will display a Discord UI View to join via button, as well as displaying
         the `race_id` which can be used to join via command. Races will only 
-        give you and your snail experience rather than prizes.
+        give you and your snail experience rather than prizes. By default, when
+        the entrance timer runs out and the there is space left (**12 racers**)
+        then it will randomly add other members to race, unless the `dont-fill`
+        flag is set.
 
-- `tournament [snail]`:
+- `tournament [snail] [dont-fill]`:
         Tournaments are like races but multiple. The entry will last for 1 
         minute after the last entrant, then there will be a betting phase which
         will last for a minute before bets are closed and the race starts. 
@@ -222,7 +225,10 @@ your best snails against the best of your rivals.
         Like the normal race, you and your snail will get experience per race, 
         but the final victor will receive a prize money. When hosting a 
         tournament it will display a Discord UI View Button to allow people to 
-        join as well as a `race_id` to join via command.
+        join as well as a `race_id` to join via command. By default, when the 
+        min number of racers, or if there are not enough racers for a race rung
+        then it will randomly select members to fill the empty slots (unless
+        the `dont-fill`) flag is set.
 
 - `bet <snail> <money>`:
         You can put a bet other peoples snails that join a tournament during the
