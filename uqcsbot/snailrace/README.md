@@ -172,7 +172,7 @@ of auction and trade state or it will be very problematic.
         give an `auction_id` to manually bid via cli. The Discord UI View will 
         update with the last bid amount and by who.
 
-- `bid <auction_id> <money>`
+- `bid <auction_id> <money>`:
         Make a bid on an active auction. If you don't bid enough it will not do
         anything. You may get out bidded if someone else bids higher than you.
 
@@ -192,7 +192,7 @@ your best snails against the best of your rivals.
         to join, but this command allows you to select your snails while the
         button only picks your snails from your default racer (`set_racer`).
 
-- `race [ 1m | 2m | 5m | 10m ] [snail]` 
+- `race [ 1m | 2m | 5m | 10m ] [snail]`:
         This will open a race for people to join. You will automatically be
         apart of the race. There are **4 race types** which are the race lengths
         in meters. If you want to use a specific snail instead of using your
@@ -201,7 +201,7 @@ your best snails against the best of your rivals.
         the `race_id` which can be used to join via command. Races will only 
         give you and your snail experience rather than prizes.
 
-- `tournament [snail]`
+- `tournament [snail]`:
         Tournaments are like races but multiple. The entry will last for 1 
         minute after the last entrant, then there will be a betting phase which
         will last for a minute before bets are closed and the race starts. 
@@ -215,7 +215,7 @@ your best snails against the best of your rivals.
         tournament it will display a Discord UI View Button to allow people to 
         join as well as a `race_id` to join via command.
 
-- `bet <snail> <money>`
+- `bet <snail> <money>`:
         You can put a bet other peoples snails that join a tournament during the
         betting phase. You make multiple bets during the betting phase and if 
         your snail wins then you earn `money * snail_odds`.
@@ -230,7 +230,8 @@ wins, or allow you to retire on a pention of snails.
         This will combine 2 snails from your inventory and make a new snail with
         a combination of the 2 snail's stats, plus a mutation. Combining certain
         snails will make stronger, faster and resilient snails. Snails must be
-        at least **2 weeks old** before they can be `breed`. 
+        at least **2 weeks old** before they can be `breed`. This will also use
+        `50g` of your money... for maintenance costs.
 
 - `shell_swap <snail_1> <snail_2>`: *
         Unlike breeding, this will not create a new snail but allow you to 
@@ -247,12 +248,58 @@ wins, or allow you to retire on a pention of snails.
 
 ## Achievements
 
-Do you wish to look down on people? Do you like achievement hunting? Do you like
-badges? Well we have the thing for you. These achievements are for doing 
-particular things, or doing things a lot. There are some achievements in the 
-list below that are quite hard or time consuming which will give you a fancy
-badge for your profile card.
+Looking to brag about your snail racing skills? Want some achievements to show 
+off to your friends? Well, we've got just the thing for you! The following is a 
+list of achievements, there are 5 levels for each achievement with increasing 
+difficulty. When you get to level 5 for the achievement you then get its badge 
+which is displayed on your profile card.
 
-> **Note:** Achievements with a `*` next to them are badges that get put on your
->           profile card.
+> **Note:** The achievements below all are at level 5, if you can get these you
+>           get a badge.
 
+- `Snail Hoarder`: 
+        You own 100 snails now? Seriously, why?
+
+- `Hype Train`: 
+        You've hyped up 100 snails of other people. You're like the snail racing 
+        version of a cheerleader.
+
+- `Ticket Master`: 
+        You've spent way too much money on the raffle, but at least you've won 
+        100 times.
+
+- `The EV Trainer`: 
+        You've bred 100 S rank snails. Your dedication to snail genetics is 
+        unparalleled.
+
+- `Black Market Trader`:
+        You've made 100 trades, and everyone knows you're the snail racing 
+        version of a Wall Street broker.
+
+- `Jerry`:
+        You've lost all your money in single big bets 10 times. Congrats, Jerry. 
+        You truly never learn.
+
+- `Ripper Doc`:
+        You've swapped shells on 50 snails, and none of your snails have their 
+        original shells. You're like a mad snail scientist.
+
+- `Big winner`
+        You've won 100 races, 100 tournaments, and all your snails have a 50% 
+        win rate. It must be lonely up here.
+
+- `Pure Kindness`
+        You've gifted away over 100 snails. You're like the Mother Teresa of 
+        snail racing.
+
+- `The Auctioneer`
+        Auction off 100 items. Your Auctioneer hammer must only be a handle at 
+        this point.
+
+- `The Highest Bidder`
+        Be the highest bidder for 100 auctions. Money? What's that?
+
+- `Snail Mechanic`
+        You've fixed or implemented something in snailrace that was approved and 
+        pulled in by the UQCS committee. It's nice to see that `snailracing` 
+        wasn't only a figment of my imagination
