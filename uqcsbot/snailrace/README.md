@@ -332,3 +332,9 @@ later if needed. So each achievement in the list of Achievement's is it's own
 type, so to add a new achievement all you need to do is create a new type. The
 value is an int which is the current value/progression, using bitwise operations
 you can fit multiple values there (eg. number of race and tournaments).
+
+
+## Racing Graphic
+
+![Race UI](./res/draft_race_design.png)
+
