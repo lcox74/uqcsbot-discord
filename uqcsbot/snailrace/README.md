@@ -1,41 +1,65 @@
 # Snail Race
 
-A fun game in the UQCS Discord bot were you can Race Snails?
+Welcome to the thrilling world of snail racing! The UQCS Discord bot brings you 
+an exhilarating game where you can race snails in single races, relays, or 
+tournaments. But it's not just about winning races - you can buy, sell, and 
+trade snails with different stats, breed them together to create the ultimate 
+snail, and earn achievements and badges that will set you apart from the rest.
 
-Features:
+Each user has their own profile that displays their wins, virtual snail money, 
+snail count, user level and experience, and recent achievements. But it's the 
+snails themselves that steal the show. Each snail is its own entity with unique 
+stats, personality, and history. Their owners are tracked and their number of 
+wins and win rate are proudly displayed. The ranking system ensures that the 
+best of the best are recognized, and even the snail's mood can be a factor in 
+their performance.
 
-- Race snails in single races, relays or tournaments
-- Buy, sell and trade snails with different stats
-- Breed snails together to create better snails
-- Earn achievements and badges
+With a range of general, trading, racing, and breeding commands at your 
+disposal, you'll have everything you need to master the world of snail racing. 
+So what are you waiting for? Get ready to feel the rush of the race and the 
+thrill of creating the ultimate snail in snailrace.
+
+
+**Core Features:**
+
+- *Race* snails in single races or tournaments
+- *Buy*, *sell* and *trade* snails with different stats
+- *Breed* snails together to create better snails
+- Earn *achievements* and *badges*
 
 ## User Profiles
 
-Each user in the discord channel will have their own profile which gets 
-displayed via a card. The card will display the following information:
+Your user profile in snailrace is your gateway to snail racing glory. Your 
+profile card displays your number of wins, win rate, virtual snail money, snail 
+count, user level and experience, as well as your recent achievements. But 
+that's not all - the profile card also showcases a small number of badges that 
+highlight your accomplishments and set you apart from other players.
 
-- The number of wins (maybe also win rate)
-- The amount of virtual snail money
-- How many Snails
-- User Level + Experience
-- Achievements (Recent 3)
+Whether you're a seasoned pro or a newbie to the game, your profile is your way 
+of showing off your snail racing prowess and displaying your achievements for 
+all to see. So get racing, earn those achievements, and collect those badges to 
+build the ultimate snail racing profile in snailrace.
 
 ## Snail
 
-Each Snail is it's own entity with its own stats and personality. Each Snail
-will track its owner history and number of wins. When displaying the stats of a
-Snail, a card will be shown with the following information:
+In snailrace, each snail is stored as an object with its own unique set of stats 
+and personality traits. The snail object tracks the following:
 
-- Name
-- Original Owner
-- Current Owner
-- Number of Wins + Win Rate
-- Ranking (from the movement stats)
-- Mood
-
-Each snail has it's own `Step Size Interval`. This is caclulated using the:
-*max speed*, *stamina* and *weight*. On each race step, the Snail will calculate 
-how far it can move using the following formula:
+- `name`
+- `level`
+- `experience` 
+- `win rate`
+- Number of `wins`
+- `original owner`
+- `current owner`
+- `ranking` based on movement stats, 
+- current `mood` (either `focused`, `happy`, or `sad`).
+  
+One key aspect of each snail is its `Step Size Interval`, which is calculated 
+based on its max `speed`, `stamina`, and `weight` which are all within the range
+of `0 to 10`. During each race step, the snail calculates how far it can move 
+using a formula that takes into account its current speed, stamina, weight, and 
+mood, as well as its previous step size and a randomly generated bias value.
 
 ```py
     # Positional data
@@ -69,6 +93,14 @@ how far it can move using the following formula:
     prev_step = random.uniform(min_step, max_step)
     position = min(position + prev_step, 100)
 ```
+
+The formula considers a range of factors that impact a snail's performance on 
+the racetrack, including its weight, stamina, and speed, as well as its current
+mood. By factoring in these various elements, snailrace aims to create a dynamic 
+and engaging racing experience that keeps players on their toes and encourages 
+them to carefully manage their snail's stats and performance in order to achieve 
+victory.
+
 
 ## Commands
 
