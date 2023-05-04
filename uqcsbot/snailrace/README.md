@@ -1,10 +1,10 @@
 # Snail Race
 
 Welcome to the thrilling world of snail racing! The UQCS Discord bot brings you 
-an exhilarating game where you can race snails in single races, relays, or 
-tournaments. But it's not just about winning races - you can buy, sell, and 
-trade snails with different stats, breed them together to create the ultimate 
-snail, and earn achievements and badges that will set you apart from the rest.
+an exhilarating game where you can race snails in single races, or tournaments. 
+But it's not just about winning races - you can buy, sell, and trade snails with 
+different stats, breed them together to create the ultimate snail, and earn 
+achievements and badges that will set you apart from the rest.
 
 Each user has their own profile that displays their wins, virtual snail money, 
 snail count, user level and experience, and recent achievements. But it's the 
