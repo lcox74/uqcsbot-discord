@@ -1,4 +1,5 @@
-# Snail Race
+# Snail Race v2.0
+> 4th May 2023
 
 Welcome to the thrilling world of snail racing! The UQCS Discord bot brings you 
 an exhilarating game where you can race snails in single races, or tournaments. 
@@ -303,3 +304,23 @@ which is displayed on your profile card.
         You've fixed or implemented something in snailrace that was approved and 
         pulled in by the UQCS committee. It's nice to see that `snailracing` 
         wasn't only a figment of my imagination
+
+## Database
+
+Due to being a bit more advanced than the `snailrace v1.0` there needs to be
+some state stored in a database. Ideally it wont be that large in terms of a 
+table column footprint.
+
+Currently the plan is to have **3 tables**:
+
+- User
+- Snail
+- Achievement
+
+![ERD](./res/dbdiagram.io.png)
+
+The design of the Achievement table is to allow more achievements to be added
+later if needed. So each achievement in the list of Achievement's is it's own
+type, so to add a new achievement all you need to do is create a new type. The
+value is an int which is the current value/progression, using bitwise operations
+you can fit multiple values there (eg. number of race and tournaments).
