@@ -145,6 +145,14 @@ status of the leaderboards, achievements and other simple things:
         pulled at the end of the raffle, you will win the prize (which is a high
         ranking snail).
 
+- `buy`:
+        So you need a new snail? You can buy a snail for `100g` this will be a
+        completely random snail generated and added to your bag.
+
+- `sell`:
+        Has your snail failed you? Are you sick of it's bullshit and no one 
+        wants it? Then you can sell it for `75g` because depreciation stings.
+
 ### Trading
 
 Compared to the other groups, the *trading* command group will most likely be
