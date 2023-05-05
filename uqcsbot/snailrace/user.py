@@ -16,5 +16,9 @@ class User:
     _snails: List[Snail]
 
     @staticmethod
-    def Load(user: discord.User):
-        pass
+    def Load(user: discord.User) -> User | None:
+        # Fetch user from database using user.id
+        
+
+        # If user does not exist, return None
+        return None
