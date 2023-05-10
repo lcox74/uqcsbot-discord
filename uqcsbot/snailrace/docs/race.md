@@ -32,6 +32,7 @@ couple of optional arguments that can be set to customise the race.
 
     - `dont-fill` To not automatically fill the race with enough racers.
     - `no-bets` Skips the betting stage.
+    - `only-one` If there was a draw, race the draw racers again until one wins.
 
 > **Note:** Some snails are better at shorter races than longer ones, this can
 >           be used for your benefit as the host with your select snail.
@@ -139,4 +140,28 @@ def step(self):
 
 ### Completed
 
-Once the 
+Once the race has completed, winner is displayed as well as the winnings of the
+users who betted right. These users will also have their money updated in the 
+database. 
+
+All racers will receive a base `5xp` regardless of wining or not. The racer/s 
+that win first place will receive `20xp` and `10g * distance`.
+
+If the `only-one` flag has been set and there was a draw, a new race will 
+commence **without** betting or entrances. The racers will be of all the racers
+that drew (not including the 2nd place and lower). This will repeat a **MAX 5**
+times until stopping and accepting that there will be a draw. The people who
+bet any of the draws will get their respected money and the racers will get 
+equal reward. The completed card will also have the sarcastic response of 
+`I give up!`.
+
+If the `dont-fill` flag has been set and the host is the only racer then the 
+completed card will display a sarcastic message like the following:
+
+- `@lcox74 has won! But it was against themselves, that was a little sad`
+- `@JimmyD has won! Suspicious there was no other snails though`
+- `@Andrew has won! But wait, it was a false start`
+
+All money from people who made bets goes back to them as the race didn't have
+enough people to warrant a reward. The racer will also not get a reward for the 
+same reason.
