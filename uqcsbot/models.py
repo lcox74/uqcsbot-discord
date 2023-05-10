@@ -45,3 +45,4 @@ class Starboard(Base):
 
     recv = Column("recv", BigInteger, primary_key=True, nullable=False)
     sent = Column("sent", BigInteger, nullable=False, unique=True)
+

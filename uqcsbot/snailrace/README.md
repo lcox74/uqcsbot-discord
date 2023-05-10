@@ -2,10 +2,10 @@
 > 4th May 2023
 
 Welcome to the thrilling world of snail racing! The UQCS Discord bot brings you 
-an exhilarating game where you can race snails in single races, or tournaments. 
-But it's not just about winning races - you can buy, sell, and trade snails with 
-different stats, breed them together to create the ultimate snail, and earn 
-achievements and badges that will set you apart from the rest.
+an exhilarating game where you can race snails in races. But it's not just about 
+winning races - you can buy, sell, and trade snails with different stats, breed 
+them together to create the ultimate snail, and earn achievements and badges 
+that will set you apart from the rest.
 
 Each user has their own profile that displays their wins, virtual snail money, 
 snail count, user level and experience, and recent achievements. But it's the 
@@ -20,13 +20,20 @@ disposal, you'll have everything you need to master the world of snail racing.
 So what are you waiting for? Get ready to feel the rush of the race and the 
 thrill of creating the ultimate snail in snailrace.
 
-
 **Core Features:**
 
-- *Race* snails in single races or tournaments
+- *Race* snails in races 
 - *Buy*, *sell* and *trade* snails with different stats
 - *Breed* snails together to create better snails
 - Earn *achievements* and *badges*
+
+
+## Spec + Documentation
+
+For further detail, please read the following documents.
+
+- [Achievements](./docs/achievements.md)
+- [Race Spec](./docs/race.md)
 
 ## User Profiles
 
@@ -61,47 +68,6 @@ based on its max `speed`, `stamina`, and `weight` which are all within the range
 of `0 to 10`. During each race step, the snail calculates how far it can move 
 using a formula that takes into account its current speed, stamina, weight, and 
 mood, as well as its previous step size and a randomly generated bias value.
-
-```py
-    # Positional data
-    position = 0
-    prev_step = 0
-
-    # Stats
-    speed = random.randint(0, 10)
-    stamina = random.randint(0, 10)
-    weight = random.randint(0, 10)
-
-    # Moods
-    focused = random.uniform(1.0, 2.0)
-    happy = random.uniform(-1.0, 1.0) # Default mood
-    sad = random.uniform(-2.0, 0.0)
-
-    # Generate a random bias
-    bias = happy
-
-    # Calculate base interval before bias and acceleration
-    max_step = 10 + speed
-    min_step = min(stamina, max_step - 5)
-    avg_step = (max_step + min_step) / 2
-
-    # Calculate acceleration factor with weight and prevStep
-    acceleration = (weight - 5) / 5 + (prev_step - avg_step) / 5
-    min_step = max(min_step + (-1 if weight < 5 else 1) * acceleration + bias, 0)
-    max_step = min(max_step + (1 if weight < 5 else -1) * acceleration + bias, 20)
-
-    # Calculate new position
-    prev_step = random.uniform(min_step, max_step)
-    position = min(position + prev_step, 100)
-```
-
-The formula considers a range of factors that impact a snail's performance on 
-the racetrack, including its weight, stamina, and speed, as well as its current
-mood. By factoring in these various elements, snailrace aims to create a dynamic 
-and engaging racing experience that keeps players on their toes and encourages 
-them to carefully manage their snail's stats and performance in order to achieve 
-victory.
-
 
 ## Commands
 
@@ -213,23 +179,6 @@ your best snails against the best of your rivals.
         then it will randomly add other members to race, unless the `dont-fill`
         flag is set.
 
-- `tournament [snail] [dont-fill]`:
-        Tournaments are like races but multiple. The entry will last for 1 
-        minute after the last entrant, then there will be a betting phase which
-        will last for a minute before bets are closed and the race starts. 
-        During the betting phase the odds for the racers will be displayed
-        and calculated using each snails win rate. This is designed to race lots 
-        of racers with a **min of 8 racers**. The raceswill be in a typical 
-        knockout ladder style. Races must have a max of 4 racers per race before 
-        going to the next position on the ladder until its `1v1` for the victor. 
-        Like the normal race, you and your snail will get experience per race, 
-        but the final victor will receive a prize money. When hosting a 
-        tournament it will display a Discord UI View Button to allow people to 
-        join as well as a `race_id` to join via command. By default, when the 
-        min number of racers, or if there are not enough racers for a race rung
-        then it will randomly select members to fill the empty slots (unless
-        the `dont-fill`) flag is set.
-
 - `bet <snail> <money>`:
         You can put a bet other peoples snails that join a tournament during the
         betting phase. You make multiple bets during the betting phase and if 
@@ -261,63 +210,6 @@ wins, or allow you to retire on a pention of snails.
         people to click to hype up the snail. You need at **least 5 people** to
         pass the hype requirements.
 
-## Achievements
-
-Looking to brag about your snail racing skills? Want some achievements to show 
-off to your friends? Well, we've got just the thing for you! The following is a 
-list of achievements, there are 5 levels for each achievement with increasing 
-difficulty. When you get to level 5 for the achievement you then get its badge 
-which is displayed on your profile card.
-
-> **Note:** The achievements below all are at level 5, if you can get these you
->           get a badge.
-
-- `Snail Hoarder`: 
-        You own 100 snails now? Seriously, why?
-
-- `Hype Train`: 
-        You've hyped up 100 snails of other people. You're like the snail racing 
-        version of a cheerleader.
-
-- `Ticket Master`: 
-        You've spent way too much money on the raffle, but at least you've won 
-        100 times.
-
-- `The EV Trainer`: 
-        You've bred 100 S rank snails. Your dedication to snail genetics is 
-        unparalleled.
-
-- `Black Market Trader`:
-        You've made 100 trades, and everyone knows you're the snail racing 
-        version of a Wall Street broker.
-
-- `Jerry`:
-        You've lost all your money in single big bets 10 times. Congrats, Jerry. 
-        You truly never learn.
-
-- `Ripper Doc`:
-        You've swapped shells on 50 snails, and none of your snails have their 
-        original shells. You're like a mad snail scientist.
-
-- `Big winner`
-        You've won 100 races, 100 tournaments, and all your snails have a 50% 
-        win rate. It must be lonely up here.
-
-- `Pure Kindness`
-        You've gifted away over 100 snails. You're like the Mother Teresa of 
-        snail racing.
-
-- `The Auctioneer`
-        Auction off 100 items. Your Auctioneer hammer must only be a handle at 
-        this point.
-
-- `The Highest Bidder`
-        Be the highest bidder for 100 auctions. Money? What's that?
-
-- `Snail Mechanic`
-        You've fixed or implemented something in snailrace that was approved and 
-        pulled in by the UQCS committee. It's nice to see that `snailracing` 
-        wasn't only a figment of my imagination
 
 ## Database
 
@@ -336,11 +228,4 @@ Currently the plan is to have **3 tables**:
 The design of the Achievement table is to allow more achievements to be added
 later if needed. So each achievement in the list of Achievement's is it's own
 type, so to add a new achievement all you need to do is create a new type. The
-value is an int which is the current value/progression, using bitwise operations
-you can fit multiple values there (eg. number of race and tournaments).
-
-
-## Racing Graphic
-
-![Race UI](./res/draft_race_design.png)
-
+value is an int which is the current value/progression.

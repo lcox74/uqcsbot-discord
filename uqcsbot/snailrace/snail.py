@@ -1,143 +1,148 @@
-import random, uuid
-from enum import Enum
+import random
 
-# from uqcsbot.snailrace.user import User
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import BigInteger, Boolean, Column, Date, DateTime, Integer, String, Time
+
+from discord import User
+from uqcsbot import bot
+
+Base = declarative_base()
+
+# ===============================
+#      Snail Mood Constants
+# ===============================
+
+SNAIL_MOOD_SAD = -1
+SNAIL_MOOD_HAPPY = 0
+SNAIL_MOOD_FOCUSED = 1
+
+def generateMoodBias(mood: int) -> float:
+    """
+    Generates a random mood bias for a snail
+    """
+    return random.uniform(-1.0 + self.value, 1.0 + self.value)
 
 
-class SnailMood(Enum):
-    SAD = -1
-    HAPPY = 0
-    FOCUSED = 1
+# ===============================
+#     Snail Logic and Record
+# ===============================
 
-    def generateBias(self):
-        return random.uniform(-1.0 + self.value, 1.0 + self.value)
+class SnailraceSnail(Base):
+    __tablename__ = 'snailrace_snails'
 
-    def __str__(self):
-        return self.name.lower()
+    # Snail Metadata
+    id = Column("id", BigInteger, primary_key=True, nullable=False)
+    name = Column("name", String, nullable=False)
+    owner_id = Column("owner_id", BigInteger, nullable=False)
+    created_ad = Column("created_at", DateTime, nullable=False)
 
+    # Snail progress stats
+    level = Column("level", BigInteger, nullable=False)
+    experience = Column("experience", BigInteger, nullable=False)
+    races = Column("races", BigInteger, nullable=False)
+    wins = Column("wins", BigInteger, nullable=False)
 
-class SnailStats:
-    speed: int
-    stamina: int
-    weight: int
+    # Stats that are used to calculate the snails's speed
+    mood = Column("mood", Integer, nullable=False)
+    speed = Column("speed", Integer, nullable=False)
+    stamina = Column("stamina", Integer, nullable=False)
+    weight = Column("weight", Integer, nullable=False)
 
-
-class Snail:
-    id: int
-    name: str
-    level: int
-    experience: int
-
-    wins: int
-    races: int
-
-    # owner: User
-    # original_owner: User
-
-    stats: SnailStats
-    mood: SnailMood
-
-    _position: int
-    _last_step: int
-
-    def __init__(self):
-        self._position = 0
-        self._last_step = 0  
+    _race_position = 0
+    _race_last_step = 0
 
     def step(self):
         # Generate Random Bias
-        bias = self.mood.generateBias()
+        bias = generateMoodBias(self.mood)
 
         # Calculate base interval before bias and acceleration
-        max_step = 10 + self.stats.speed
-        min_step = min(self.stats.stamina, max_step - 5)
-        avg_step = (max_step + min_step) / 2
+        max_step = 10 + self.speed
+        min_step = min(self.stamina, max_step - 5)
+        avg_step = float(max_step + min_step) / 2.0
 
         # Calculate acceleration factor with weight and prevStep
-        acceleration = (self.stats.weight - 5) / 5 + (self._last_step - avg_step) / 5
+        acceleration = float(self.weight - 5) / 5.0 + float(self._last_step - avg_step) / 5.0
         min_step = max(
-            min_step + (-1 if self.stats.weight < 5 else 1) * acceleration + bias, 0
+            min_step + (-1 if self.weight < 5 else 1) * acceleration + bias, 0
         )
         max_step = min(
-            max_step + (1 if self.stats.weight < 5 else -1) * acceleration + bias, 20
+            max_step + (1 if self.weight < 5 else -1) * acceleration + bias, 20
         )
 
         # Calculate new position
         self._last_step = random.uniform(min_step, max_step)
         self._position = min(self._positionposition + self._last_step, 100)
 
-    def __str__(self):
 
-        sp_bar = "Speed: ".ljust(10) + "[%s]" % ("=" * int(self.stats.speed)).ljust(10)
-        st_bar = "Stamina: ".ljust(10) + "[%s]" % ("=" * int(self.stats.stamina)).ljust(10)
-        wt_bar = "Weight: ".ljust(10) + "[%s]" % ("=" * int(self.stats.weight)).ljust(10)
+def GetSnail(bot_handle: bot.UQCSBot, user: discord.User) -> SnailraceSnail | None:
+    """
+    Gets all snails owned by a user
+    """
+    
+    # Get user from database
+    db_session = bot_handle.create_db_session()
+    snails = db_session.query(SnailraceSnail).filter(SnailraceSnail.owner_id == user.id)
+    db_session.close()
 
-        return "%s (lvl %d - %dxp)\n\t%s\n\t%s\n\t%s\n\t" % (self.name, self.level, self.experience, sp_bar, st_bar, wt_bar)
+    return set(snails)
 
-def NewSnail() -> Snail:
-    snail = Snail()
-    snail._position = 0
-    snail._last_step = 0
+def GetSnails(bot_handle: bot.UQCSBot, user: discord.User) -> set[SnailraceSnail]:
+    """
+    Gets all snails owned by a user
+    """
+    
+    # Get user from database
+    db_session = bot_handle.create_db_session()
+    snails = db_session.query(SnailraceSnail).filter(SnailraceSnail.owner_id == user.id)
+    db_session.close()
+
+    return set(snails)
+
+def CreateSnail(bot_handle: bot.UQCSBot, user: discord.User) -> SnailraceSnail:
+    """
+    Creates a new snail in the database
+    """
+    
+    # Create a new user object
+    new_snail = SnailraceSnail()
+    new_snail.owner_id = user.id
 
     # Generate Random Name
-    with open("./snail_adj.txt") as adj, open("./snail_noun.txt") as noun:
+    with open("./uqcsbot/snailrace/res/snail_adj.txt") as adj, open("./uqcsbot/snailrace/res/snail_noun.txt") as noun:
         adjectives = adj.readlines()
         nouns = noun.readlines()
-        snail.name = random.choice(adjectives).strip() + "-" + random.choice(nouns).strip()
+        new_snail.name = random.choice(adjectives).strip() + "-" + random.choice(nouns).strip()
 
-    # Generate Random Stats
-    snail.stats = SnailStats()
-    snail.stats.speed = random.randint(1, 10)
-    snail.stats.stamina = random.randint(1, 10)
-    snail.stats.weight = random.randint(1, 10)
+    # Set snail stats
+    new_snail.speed = random.randint(1, 10)
+    new_snail.stamina = random.randint(1, 10)
+    new_snail.weight = random.randint(1, 10)
 
-    # Set Mood
-    snail.mood = SnailMood.HAPPY
+    # Add user to database
+    db_session = bot_handle.create_db_session()
+    db_session.add(new_snail)
+    db_session.commit()
+    db_session.close()
 
-    snail.level = 1
-    snail.experience = 0
-    snail.wins = 0
-    snail.races = 0
+    return new_snail
 
-    return snail
+def GenerateSnailOdd(snail_index: int, snails: set[SnailraceSnail]) -> float:
+    # Sanity check
+    if snail_index < 0 or snail_index >= len(snails):
+        return 0.0
+    
+    # Get the snail
+    snail = snails[snail_index]
 
-def LoadSnail(id: str) -> Snail | None:
-    # Fetch snail from database using id
-    return None
+    # Pre-calculate values
+    sp_norm = snail.speed / sum([snail.speed for snail in snails])
+    st_norm = snail.stamina / sum([snail.stamina for snail in snails])
 
-def GetOdds(index: int, entrants: list[Snail]) -> float:
-        # Sanity check
-        if index < 0 or index >= len(entrants):
-            return 0.0
-        
-        # Get the snail
-        snail = entrants[index]
+    win_rate = 1
+    if snail.wins != 0:
+        win_rate = 1.0 - (snail.wins / snail.races)
+        if win_rate == 0:
+            return 10.0 * (1 - (sp_norm + st_norm)) 
 
-        # Pre-calculate values
-        sp_norm = snail.stats.speed / sum([snail.stats.speed for snail in entrants])
-        st_norm = snail.stats.stamina / sum([snail.stats.stamina for snail in entrants])
-
-        win_rate = 1
-        if snail.wins != 0:
-            win_rate = 1.0 - (snail.wins / snail.races)
-            if win_rate == 0:
-                return 10.0 * (1 - (sp_norm + st_norm)) 
-
-        # Calculate odds
-        return 10.0 * win_rate * (1 - (sp_norm + st_norm))
-
-
-
-# Testing stuff locally
-
-snails = [NewSnail() for i in range(10)]
-
-for i in range(len(snails)):
-
-    snails[i].races = random.randint(1, 10)
-    snails[i].wins = random.randint(1, snails[i].races)
-    winrate = (snails[i].wins / snails[i].races) * 100.0
-
-    print(snails[i])
-    print("\tOdds: %f" % GetOdds(i, snails))
-    print("\tw/l: %.02f%%\n" % winrate)
+    # Calculate odds
+    return 10.0 * win_rate * (1 - (sp_norm + st_norm))
