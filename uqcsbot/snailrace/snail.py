@@ -127,6 +127,10 @@ def CreateSnail(bot_handle: bot.UQCSBot, user: discord.User) -> SnailraceSnail:
     return new_snail
 
 def GenerateSnailOdd(snail_index: int, snails: set[SnailraceSnail]) -> float:
+    """
+    What are the chances of a snail winning? Generate the odds of a specific 
+    in the snails set.
+    """
     # Sanity check
     if snail_index < 0 or snail_index >= len(snails):
         return 0.0
