@@ -165,3 +165,129 @@ completed card will display a sarcastic message like the following:
 All money from people who made bets goes back to them as the race didn't have
 enough people to warrant a reward. The racer will also not get a reward for the 
 same reason.
+
+### Race Win Messages
+
+| Condition        | Number of snails | Number of wins |
+| ---------------- | ---------------- | -------------- |
+| Normal Win       | 4+               | 1              |
+| Normal Tie       | 4+               | 2              |
+| Normal 3 Way     | 4+               | 3              |
+| Normal Super Tie | 4+               | 4+             |
+| Duel Win         | 2                | 1              |
+| Duel Tie         | 2                | 2              |
+| Single           | 1                | 1              |
+
+
+Race messages should be generated using a function that has the context of all
+snails including the winning snails. An example can be as follows:
+
+```py
+def generate_win_message(winners: set[int], snails: set[Snail]) -> str:
+    """
+    From a set of winners and racers, randomly generate a response string to
+    announce.
+    """
+    num_snails = len(snails)
+    num_winners = len(winners)
+
+    # Error Handle
+    if num_snails == 0 or num_winners == 0:
+        return "Hmmm... Something is wrong here"
+
+    ## Check Conditions
+    ...
+    
+```
+
+**Normal Win**
+
+- "We have a clear winner! `{snail name} (@{owner})` leaves the competition behind and races to victory!"
+- "In an astonishing performance, `{snail name} (@{owner})` outpaces all the other snails and claims the first-place trophy!"
+- "Congratulations to `{snail name} (@{owner})` for a stunning display of snail athleticism! The victory is well-deserved!"
+- "And the winner is... drumroll... `{snail name} (@{owner})`! Snailtastic job!"
+- "In a thrilling finish, `{snail name} (@{owner})` crosses the finish line first! Slow and steady wins the race!"`
+- "Hooray! `{snail name} (@{owner})` leaves the competition in the dust and emerges victorious!"
+- "The crowd goes wild as `{snail name} (@{owner})` emerges as the champion, leaving the competition in their slimy wake!"
+- "A resounding victory for `{snail name} (@{owner})`! Their speed may be a mystery, but their determination is unmatched!"
+- "In a stunning display of snail prowess, `{snail name} (@{owner})` claims the top spot. What a race!"
+- "With lightning-fast speed (relatively speaking), `{snail name} (@{owner})` zips across the finish line, claiming the win!"
+
+**Normal Tie**
+
+- "We have a nail-biting tie! It's a shared victory between `{snail name} (@{owner})` and `{snail name} (@{owner})`! Snails in sync!"
+- "Unbelievable! `{snail name} (@{owner})` and `{snail name} (@{owner})` cross the finish line simultaneously! It's a snail photo finish!"
+- "What are the odds? We have a tie between `{snail name} (@{owner})` and `{snail name} (@{owner})`! These snails are true competitors!"
+- "It's an incredible tie! `{snail name} (@{owner})` and `{snail name} (@{owner})` finish the race together, sharing the glory!"
+- "The finish line witnesses a rare moment as `{snail name} (@{owner})` and `{snail name} (@{owner})` cross it simultaneously! We have dual champions!"
+- "No one saw that coming! `{snail name} (@{owner})` and `{snail name} (@{owner})` match each other step for step and achieve a remarkable tie!"
+- "We have a sensational tie! `{snail name} (@{owner})` and `{snail name} (@{owner})` share the glory in this nail-biting finish!"
+- "It's a deadlock! `{snail name} (@{owner})` and `{snail name} (@{owner})` cross the finish line simultaneously, leaving us in awe!"
+- "Wow, what a photo finish! `{snail name} (@{owner})` and `{snail name} (@{owner})` can't be separated. It's a tie!"
+- "Two snails, one glorious finish! `{snail name} (@{owner})` and `{snail name} (@{owner})` prove that sharing is caring!"
+  
+**Normal 3 Way**
+
+- "It's a miraculous three-way tie! `{snail name} (@{owner})`, `{snail name} (@{owner})`, and `{snail name} (@{owner})` all cross the finish line together, leaving us in awe!"
+- "Hold on to your shells! In an astonishing turn of events, `{snail name} (@{owner})`, `{snail name} (@{owner})`, and `{snail name} (@{owner})` finish in perfect harmony. It's a remarkable three-way tie!"
+- "In a display of snail synchronicity, `{snail name} (@{owner})`, `{snail name} (@{owner})`, and `{snail name} (@{owner})` cross the finish line simultaneously. It's a three-way tie for the ages!"
+- "It's a snail miracle! `{snail name} (@{owner})`, `{snail name} (@{owner})`, and `{snail name} (@{owner})` defy the odds and create a breathtaking three-way tie!"
+- "Three snails, one finish line, and an unforgettable result! `{snail name} (@{owner})`, `{snail name} (@{owner})`, and `{snail name} (@{owner})` share the glory in an epic three-way tie!"
+- "In a stunning twist of fate, `{snail name} (@{owner})`, `{snail name} (@{owner})`, and `{snail name} (@{owner})` demonstrate their snail prowess by finishing together. It's a three-way tie for the record books!"
+- "The race gods must be smiling upon us! `{snail name} (@{owner})`, `{snail name} (@{owner})`, and `{snail name} (@{owner})` astound us with their snail racing perfection. It's a spectacular three-way tie!"
+- "Three snails, three champions! `{snail name} (@{owner})`, `{snail name} (@{owner})`, and `{snail name} (@{owner})` refuse to be outdone, resulting in an exhilarating three-way tie!"
+- "Witness the magic of snail racing as `{snail name} (@{owner})`, `{snail name} (@{owner})`, and `{snail name} (@{owner})` reach the finish line simultaneously. It's a sensational three-way tie!"
+- "It's a snail extravaganza! `{snail name} (@{owner})`, `{snail name} (@{owner})`, and `{snail name} (@{owner})` bring the crowd to their feet with a magnificent three-way tie!"
+
+**Normal Super Tie**
+
+- "We don't understand how this happened... but `{snail name} (@{owner})`, `{snail name} (@{owner})`... have drawn!"
+- "In an unprecedented result, `{snail name} (@{owner})`, `{snail name} (@{owner})`... have all drawn!"
+- "WHAT IS THIS MADNESS? `{snail name} (@{owner})`, `{snail name} (@{owner})` ... WHAT DID YOU DO!! "
+- "Much like life, there are no real winners here. But congrats anyway `{snail name} (@{owner})`, `{snail name} (@{owner})` ..."
+- "I'm not exactly sure how to handle this, but `{snail name} (@{owner})`, `{snail name} (@{owner})` ... have all won"
+- "If you aren't happy with the result, be the change you want to be. But anyway, well done `{snail name} (@{owner})`, `{snail name} (@{owner})` ..."
+- "Unbelievable! We have a historic tie between `{snail name} (@{owner})`, `{snail name} (@{owner})` ..."
+- "A party of snails have crossed the line! `{snail name} (@{owner})`, `{snail name} (@{owner})` ..."
+- "Hold your breath! There's perfect synchronisation between `{snail name} (@{owner})`, `{snail name} (@{owner})` ..."
+- "We have a snail traffic jam! `{snail name} (@{owner})`, `{snail name} (@{owner})` ... have all crossed the line, resulting in a thrilling tie!"
+
+**Duel Win**
+
+- "It's a nail-biting duel, but `{snail name} (@{owner})` outmaneuvers `{snail name} (@{owner})` and secures a decisive victory! The snail supremacy is established!"
+- "In a fierce showdown, `{snail name} (@{owner})` proves its mettle and triumphs over its rival `{snail name} (@{owner})`! Victory is sweet for this determined snail!"
+- "With incredible speed and precision, `{snail name} (@{owner})` overtakes  `{snail name} (@{owner})`, leaving no doubt about who the true champion is!"
+- "In a battle of wills and sluggishness, `{snail name} (@{owner})` outpaces `{snail name} (@{owner})` to seize the win!"
+- "It's a duel for the ages, and `{snail name} (@{owner})` emerges as the snail champion, defeating `{snail name} (@{owner})` with style!"
+- "In a race filled with anticipation, `{snail name} (@{owner})` emerges victorious, leaving `{snail name} (@{owner})` in their slimy wake!"
+- "With shells clashing and slime flying, `{snail name} (@{owner})` outmaneuvers `{snail name} (@{owner})` to claim the victory!"
+- "In an intense snail showdown, `{snail name} (@{owner})` emerges triumphant, leaving `{snail name} (@{owner})` in disbelief!"
+- "It's a fierce duel, but `{snail name} (@{owner})` snails their way to victory, leaving `{snail name} (@{owner})` in their slimy wake!"
+- "`{snail name} (@{owner})` proves their racing mettle by triumphing over `{snail name} (@{owner})` in a thrilling head-to-head race!"
+
+**Duel Tie**
+
+- "A stunning twist of fate! `{snail name} (@{owner})` and `{snail name} (@{owner})` match each other stride for stride and conclude the race in a perfect tie!"
+- "In an extraordinary display of skill, `{snail name} (@{owner})` and `{snail name} (@{owner})` finish the race together, unable to be separated! A dual triumph!"
+- "In a showdown for the ages, `{snail name} (@{owner})` and `{snail name} (@{owner})` refuse to let the other take the glory. It's an incredible tie in their one-on-one race!"
+- "It's a snail stalemate! `{snail name} (@{owner})` and `{snail name} (@{owner})` cross the finish line together in a thrilling duel. It's a tie!"
+- "Hold your slime! `{snail name} (@{owner})` and `{snail name} (@{owner})` refuse to back down, resulting in a breathtaking tie in their duel!"
+- "Two snails enter, two snails tie! `{snail name} (@{owner})` and `{snail name} (@{owner})` prove to be equally matched in this extraordinary race!"
+- "In a surprising turn of events, `{snail name} (@{owner})` and `{snail name} (@{owner})` can't be separated. It's a thrilling tie in their one-on-one race!"
+- "Two snails, one finish line, and a nail-biting result! `{snail name} (@{owner})` and `{snail name} (@{owner})` tie in an unforgettable duel!"
+- "It's a snail standoff! `{snail name} (@{owner})` and `{snail name} (@{owner})` can't be separated. It's a glorious tie!"
+- "In an extraordinary display of snail talent, `{snail name} (@{owner})` and `{snail name} (@{owner})` tie in an epic race!"
+
+
+**Single**
+
+- "In a race with only one contender, `{snail name} (@{owner})` emerges as the undefeated champion! A magnificent solo performance!"
+- "With no competitors to challenge it, `{snail name} (@{owner})` races ahead to claim a flawless victory! A legendary snail achievement!"
+- "`{snail name} (@{owner})` wins by default in a race with no opponents! Sometimes, being the only snail has its advantages!"
+- "In a surprising turn of events, `{snail name} (@{owner})` wins the race uncontested. A true snail legend!"
+- "`{snail name} (@{owner})` shows up to an empty track but still manages to win. Now that's what we call snail power!"
+- "It's a one-snail show! `{snail name} (@{owner})` sprints to the finish line without any opponents in sight!"
+- "Unchallenged and unbeatable, `{snail name} (@{owner})` conquers the race without breaking a slimy sweat!"
+- "No competitors? No problem! `{snail name} (@{owner})` crosses the finish line alone, securing a solo victory!"
+- "`{snail name} (@{owner})` claims an uncontested victory! They were the only snail on the track, but they still rocked it!"
+- "In a race against... well, no one, `{snail name} (@{owner})` emerges as the sole champion!"
