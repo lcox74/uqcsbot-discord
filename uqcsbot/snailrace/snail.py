@@ -63,10 +63,12 @@ class SnailraceSnail(Base):
         # Calculate acceleration factor with weight and prevStep
         acceleration = float(self.weight - 5) / 5.0 + float(self._last_step - avg_step) / 5.0
         min_step = max(
-            min_step + (-1 if self.weight < 5 else 1) * acceleration + bias, 0
+            0,
+            min_step + (-1 if self.weight < 5 else 1) * acceleration + bias
         )
         max_step = min(
-            max_step + (1 if self.weight < 5 else -1) * acceleration + bias, 20
+            20,
+            max_step + (1 if self.weight < 5 else -1) * acceleration + bias
         )
 
         # Calculate new position
