@@ -4,7 +4,7 @@ from discord import app_commands, ui
 from discord.ext import commands
 from uqcsbot.bot import UQCSBot
 
-from snailrace.user import GetUser, CreateUser
+from snailrace.user import GetUser, CreateUser, CreateStarterSnail
 from snailrace.embed_responses import *
 
 class SnailRace(commands.Cog):
@@ -26,6 +26,15 @@ class SnailRace(commands.Cog):
         # Check if user is already initialised
         user = GetUser(self.bot, interaction.user)
         if user is not None:
+            # Check if the user has a snail
+            if not user.hasSnail():
+                # Try and create a snail for the user
+                if CreateStarterSnail(self.bot, interaction.user, user) is None:
+                    await interaction.response.send_message(
+                        embed=INIT_FAILED(interaction.user.name)
+                    )
+                    return
+                    
             await interaction.response.send_message(
                 embed=EXISTING_USER(interaction.user.name, user.cacheSnail)
             )
@@ -33,11 +42,20 @@ class SnailRace(commands.Cog):
 
         # Create the user and load the default snail
         user = CreateUser(self.bot, interaction.user)
-        if user is None or not user.valid():
+        if user is None:
             await interaction.response.send_message(
                 embed=INIT_FAILED(interaction.user.name)
             )
             return
+        
+        # Check if the user has a snail
+        if not user.hasSnail():
+            # Try and create a snail for the user
+            if CreateStarterSnail(self.bot, interaction.user, user) is None:
+                await interaction.response.send_message(
+                    embed=INIT_FAILED(interaction.user.name)
+                )
+                return
 
         # Send success message
         await interaction.response.send_message(

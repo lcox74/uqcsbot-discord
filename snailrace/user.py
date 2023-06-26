@@ -42,7 +42,13 @@ class SnailraceUser(Base):
         """
         Checks if the user object is valid and initialised
         """
-        return (self.id is not None) and (self.default_snail_id is not None)
+        return (self.id is not None)
+    
+    def hasSnail(self) -> bool:
+        """
+        Checks if the user has a snail
+        """
+        return self.cacheSnail is not None
 
 
 
@@ -85,8 +91,13 @@ def CreateUser(bot_handle: bot.UQCSBot, user: discord.User) -> SnailraceUser | N
     db_session.refresh(new_user)
     db_session.close()
 
-    print("new user:", new_user.id)
+    # Create a random snail for the user
+    CreateStarterSnail(bot_handle, user, new_user)
 
+    return new_user
+    
+    
+def CreateStarterSnail(bot_handle: bot.UQCSBot, user: discord.User, user_record: SnailraceUser) -> SnailraceSnail | None:
     # Create a random snail for the user
     new_snail = CreateSnail(bot_handle, user)
     if new_snail is None:
@@ -94,10 +105,10 @@ def CreateUser(bot_handle: bot.UQCSBot, user: discord.User) -> SnailraceUser | N
     
     # Set the user's default snail
     SetUserDefaultSnail(bot_handle, user, new_snail.id)
-    new_user.default_snail_id = new_snail.id
-    new_user.cacheSnail = new_snail
+    user_record.default_snail_id = new_snail.id
+    user_record.cacheSnail = new_snail
 
-    return new_user
+    return new_snail
 
 def SetUserDefaultSnail(bot_handle: bot.UQCSBot, user: discord.User, snail_id: int) -> bool:
     """
