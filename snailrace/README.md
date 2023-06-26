@@ -79,6 +79,10 @@ different sections: *general*, *trading*, *racing* and *breeding*.
 >           response only goes back to the original sender. This will also
 >           timeout/delete after 15 minutes.
 
+To start with, you will need to initialise yourself as a new player. This can
+be done as easy as `/snailrace init`. This will initialise your user with `10g` 
+of money and generate a random starting snail for your user.
+
 ### General
 
 The following arent fully related to the other 3 and is more for checking the 

@@ -1,12 +1,11 @@
-import random
+import random, discord, datetime
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import BigInteger, Boolean, Column, Date, DateTime, Integer, String, Time
 
-from discord import User
 from uqcsbot import bot
 
-Base = declarative_base()
+from uqcsbot.models import Base
 
 # ===============================
 #      Snail Mood Constants
@@ -15,6 +14,17 @@ Base = declarative_base()
 SNAIL_MOOD_SAD = -1
 SNAIL_MOOD_HAPPY = 0
 SNAIL_MOOD_FOCUSED = 1
+
+# ===============================
+#      Snail Stat Constants
+# ===============================
+
+SNAIL_STAT_MIN = 1
+SNAIL_STAT_MAX = 10
+SNAIL_STAT_STARTER_MIN = 1
+SNAIL_STAT_STARTER_MAX = 5
+SNAIL_STAT_HIGHER_MIN = 5
+SNAIL_STAT_HIGHER_MAX = 10
 
 def generateMoodBias(mood: int) -> float:
     """
@@ -34,7 +44,7 @@ class SnailraceSnail(Base):
     id = Column("id", BigInteger, primary_key=True, nullable=False)
     name = Column("name", String, nullable=False)
     owner_id = Column("owner_id", BigInteger, nullable=False)
-    created_ad = Column("created_at", DateTime, nullable=False)
+    created_at = Column("created_at", DateTime, nullable=False)
 
     # Snail progress stats
     level = Column("level", BigInteger, nullable=False)
@@ -50,6 +60,46 @@ class SnailraceSnail(Base):
 
     _race_position = 0
     _race_last_step = 0
+
+    def initialiseSnailDefaults(self, owner_id: int) -> self:
+        # Create a new user object
+        self.owner_id = user.id
+        self.created_at = datetime.datetime.now()
+        self.mood = SNAIL_MOOD_HAPPY
+        self.level = 1
+        self.experience = 0
+        self.races = 0
+        self.wins = 0
+
+        # Generate Random Name
+        with open("./snailrace/res/snail_adj.txt") as adj, open("./snailrace/res/snail_noun.txt") as noun:
+            adjectives = adj.readlines()
+            nouns = noun.readlines()
+            self.name = random.choice(adjectives).strip() + "-" + random.choice(nouns).strip()
+
+    def initialiseStarterSnail(self, owner_id: int) -> self:
+        self.initialiseSnailDefaults(owner_id)
+
+        # Set snail stats
+        self.speed = random.randint(SNAIL_STAT_STARTER_MIN, SNAIL_STAT_STARTER_MAX)
+        self.stamina = random.randint(SNAIL_STAT_STARTER_MIN, SNAIL_STAT_STARTER_MAX)
+        self.weight = random.randint(SNAIL_STAT_STARTER_MIN, SNAIL_STAT_STARTER_MAX)
+
+    def initialiseHigherSnail(self, owner_id: int) -> self:
+        self.initialiseSnailDefaults(owner_id)
+
+        # Set snail stats
+        self.speed = random.randint(SNAIL_STAT_HIGHER_MIN, SNAIL_STAT_HIGHER_MAX)
+        self.stamina = random.randint(SNAIL_STAT_HIGHER_MIN, SNAIL_STAT_HIGHER_MAX)
+        self.weight = random.randint(SNAIL_STAT_HIGHER_MIN, SNAIL_STAT_HIGHER_MAX)
+
+    def initialiseRandomSnail(self, owner_id: int) -> self:
+        self.initialiseSnailDefaults(owner_id)
+
+        # Set snail stats
+        self.speed = random.randint(SNAIL_STAT_MIN, SNAIL_STAT_MAX)
+        self.stamina = random.randint(SNAIL_STAT_MIN, SNAIL_STAT_MAX)
+        self.weight = random.randint(SNAIL_STAT_MIN, SNAIL_STAT_MAX)
 
     def step(self):
         # Generate Random Bias
@@ -107,23 +157,13 @@ def CreateSnail(bot_handle: bot.UQCSBot, user: discord.User) -> SnailraceSnail:
     
     # Create a new user object
     new_snail = SnailraceSnail()
-    new_snail.owner_id = user.id
-
-    # Generate Random Name
-    with open("./uqcsbot/snailrace/res/snail_adj.txt") as adj, open("./uqcsbot/snailrace/res/snail_noun.txt") as noun:
-        adjectives = adj.readlines()
-        nouns = noun.readlines()
-        new_snail.name = random.choice(adjectives).strip() + "-" + random.choice(nouns).strip()
-
-    # Set snail stats
-    new_snail.speed = random.randint(1, 10)
-    new_snail.stamina = random.randint(1, 10)
-    new_snail.weight = random.randint(1, 10)
+    new_snail.initialiseStarterSnail(user.id)
 
     # Add user to database
     db_session = bot_handle.create_db_session()
     db_session.add(new_snail)
     db_session.commit()
+    db_session.refresh(new_snail)
     db_session.close()
 
     return new_snail
