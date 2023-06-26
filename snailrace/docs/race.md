@@ -12,19 +12,10 @@ document.
 
 ## Command
 
-> `/snailrace race [ distance ] [ snail ] [ flags ]`
+> `/snailrace host [ { flags } ]`
 
 The command above is the simple initiator to start/host a race. There are a
 couple of optional arguments that can be set to customise the race.
-
-- `distance`: Set the distance of the race track, by default it is `1m` but 
-              there are multiple lengths which mainly only change how long it 
-              takes the racers to complete the race. `[1m | 2m | 5m | 10m]`
-
-- `snail`: By default, your `set-snail` will race. But if you wan't one of the
-           other snails from your stock, you can specify their name here and it
-           will race them instead. If you choose a snail that doesn't exist, 
-           then it will use your default snail instead of erroring.
 
 - `flags`: This is a list of options/strings that act as booleans for the 
            command. By default, none of these are active. The possible values 

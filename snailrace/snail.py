@@ -131,6 +131,9 @@ class SnailraceSnail(Base):
         weightStr = "Weight".ljust(9) + f"[{self.weight * '#'}{(SNAIL_STAT_MAX - self.weight) * ' '}]"
         return f"{speedStr}\n{staminaStr}\n{weightStr}\n"
 
+    def __str__(self) -> str:
+        return f"{self.name} (<@{self.owner_id}>)"
+
 
 def GetSnail(bot_handle: bot.UQCSBot, user: discord.User, snail_id: int) -> SnailraceSnail | None:
     """

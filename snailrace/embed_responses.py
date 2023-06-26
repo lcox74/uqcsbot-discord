@@ -41,3 +41,12 @@ INIT_FAILED: discord.Embed = lambda name : EmbedStyle(
         "again later."
     )
 ).compile()
+
+NOT_INIT_USER: discord.Embed = lambda name, cmd : EmbedStyle(
+    color=discord.Color.red(),
+    title=f"I'm sorry {name}, but you aren't initialised yet",
+    description=(
+        "Please run `\snailrace init` to initialise your account. Then you can "
+        f"run `{cmd}` again."
+    )
+).compile()
