@@ -88,7 +88,7 @@ class SnailRace(commands.Cog):
             return
 
         # Generate a new race with unique id
-        new_race = SnailraceRace(no_bets, dont_fill, only_one)
+        new_race = SnailraceRace(self.bot, interaction.user.mention, no_bets, dont_fill, only_one)
         while new_race in self.active_races:
             new_race.regenId()
         
@@ -97,7 +97,8 @@ class SnailRace(commands.Cog):
         self.active_races.append(new_race)
 
         # Send the initial message
-        await new_race.renderInitial(self.bot, interaction)
+        await new_race.renderOpen(interaction)
+        await interaction.response.send_message(embed=RACE_HOSTED(interaction.user.name), ephemeral=True)
 
 
 

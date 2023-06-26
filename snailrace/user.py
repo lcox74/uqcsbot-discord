@@ -65,8 +65,10 @@ def GetUser(bot_handle: bot.UQCSBot, user: discord.User, create: bool = False) -
     # If user does not exist, create a new user
     if user is None and create: 
         return CreateUser(bot, user)
-    else:
-        user.load(bot_handle, user)
+    elif user is None:
+        return None
+    
+    user.load(bot_handle, user)
     
     return user
 

@@ -1,8 +1,12 @@
 import discord, uuid, random
 
+from discord import ui
+
 from uqcsbot import bot
 
+from snailrace.user import GetUser
 from snailrace.snail import SnailraceSnail
+from snailrace.embed_responses import *
 
 RACE_STATE = {
     "RACE_OPEN": 0,
@@ -11,11 +15,26 @@ RACE_STATE = {
     "COMPLETED": 3
 }
 
+# Trying out Discord buttons for Snail Race Interactions
+class SnailRaceView(discord.ui.View):
+    def __init__(self, joinCb):
+        super().__init__()
+        self.joinCb = joinCb
+
+    @ui.button(label="Join Race", style=discord.ButtonStyle.primary)
+    async def button_callback(
+        self, interaction: discord.Interaction, button: discord.ui.Button
+    ):
+        await self.joinCb(interaction)
+
+
+
 class SnailraceRace:
-    def __init__(self, no_bets: bool, dont_fill: bool, only_one: bool):
+    def __init__(self, bot_handle: bot.UQCSBot, host: str, no_bets: bool, dont_fill: bool, only_one: bool):
         self.discord_message = None
         self.race_id = str(uuid.uuid4())[-11:]
-        self.host = ""
+        self.host = host
+        self.bot = bot_handle
 
         self._snails = []
         self._state = RACE_STATE["RACE_OPEN"]
@@ -45,18 +64,45 @@ class SnailraceRace:
         self._snails.append(snail)
         return True
 
-    async def renderInitial(self, bot_handle: bot.UQCSBot, interaction: discord.Interaction):
-        generate_message = ("# **Race: Open**\nA new race has been hosted by "
-            f"{interaction.user.mention}\n\nRace ID: `{self.race_id}`\n"
-            f"Location: `{self.location}`\n\nTo join via command, enther the "
-            f"following:\n```\n/snailrace join {self.race_id}\n```\n"
-            f"**Entrants: ({len(self._snails)}/12)**\n")
+    async def joinCb(self, interaction: discord.Interaction):
+        get_user = GetUser(self.bot, interaction.user)
+        if get_user is None:
+            await interaction.response.send_message(
+                embed=NOT_INIT_USER(interaction.user.name, "/snailrace join"), 
+                ephemeral=True
+            )
+            return
+
+        if not self.addSnail(get_user.cacheSnail):
+            await interaction.response.send_message(
+                embed=ALREADY_JOINED_OR_FULL(interaction.user.name), 
+                ephemeral=True
+            )
+            return
+        
+        await interaction.response.send_message(
+            embed=JOIN_SUCCESS(interaction.user.name), ephemeral=True
+            
+        )
+        await self.renderOpen(interaction)
+
+    def getOpenRaceEmbed(self) -> discord.Embed:
+        embed = RACE_OPEN(self)
         
         for snail in range(len(self._snails)):
             # Get user from snail
-            generate_message += f"{snail}. {self._snails[snail]}\n"
+            embed.description += f"{snail}. {self._snails[snail]}\n"
 
-        await interaction.response.send_message(generate_message)
+        return embed
+
+    async def renderOpen(self, interaction: discord.Interaction):
+        embed = self.getOpenRaceEmbed()
+
+        if self.discord_message is None:
+            self.discord_message = await interaction.channel.send(embed=embed, view=SnailRaceView(self.joinCb))
+            return
+
+        await self.discord_message.edit(embed=embed, view=SnailRaceView(self.joinCb))
     
     def setMessage(self, response: discord.InteractionResponse):
         self.discord_message = response

@@ -22,7 +22,7 @@ SNAIL_MOOD_FOCUSED = 1
 SNAIL_STAT_MIN = 1
 SNAIL_STAT_MAX = 10
 SNAIL_STAT_STARTER_MIN = 1
-SNAIL_STAT_STARTER_MAX = 5
+SNAIL_STAT_STARTER_MAX = 3
 SNAIL_STAT_HIGHER_MIN = 5
 SNAIL_STAT_HIGHER_MAX = 10
 
@@ -133,6 +133,9 @@ class SnailraceSnail(Base):
 
     def __str__(self) -> str:
         return f"{self.name} (<@{self.owner_id}>)"
+
+    def __eq__(self, other) -> bool:
+        return self.id == other.id
 
 
 def GetSnail(bot_handle: bot.UQCSBot, user: discord.User, snail_id: int) -> SnailraceSnail | None:
