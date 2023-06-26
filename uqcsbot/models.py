@@ -53,11 +53,6 @@ class Reminders(Base):
     week_frequency = Column("week_frequency", Integer, nullable=True)
 
 
-<<<<<<< HEAD
-    recv = Column("recv", BigInteger, primary_key=True, nullable=False)
-    sent = Column("sent", BigInteger, nullable=False, unique=True)
-
-=======
 class Starboard(Base):
     __tablename__ = "starboard"
 
@@ -69,4 +64,3 @@ class Starboard(Base):
     recv = Column("recv", BigInteger, primary_key=True, nullable=True)
     recv_location = Column("recv_location", BigInteger, nullable=True, unique=False)
     sent = Column("sent", BigInteger, primary_key=True, nullable=True, unique=True)
->>>>>>> main
