@@ -23,8 +23,17 @@ class SnailRace(commands.Cog):
         """
 
         # Check if user is already initialised
-        if GetUser(self.bot, interaction.user) is not None:
-            await interaction.response.send_message("You are already initialised!")
+        user = GetUser(self.bot, interaction.user)
+        if user is not None:
+            user.load(self.bot, interaction.user)
+
+            existing_embed = discord.Embed(
+                title="You are already initialised " + interaction.user.name + "!",
+                description=f"Your snail currently active snail is **{user.cacheSnail.name} (lvl. {user.cacheSnail.level})** with the following stats:\n\n```\n{user.cacheSnail.getStatString()}\n```\n",
+                color=discord.Color.green()
+            )
+
+            await interaction.response.send_message(embed=existing_embed)
             return
 
         # Create the user
@@ -32,9 +41,16 @@ class SnailRace(commands.Cog):
         if user is None or not user.valid():
             await interaction.response.send_message("Failed to initialise user!")
             return
+
+        user.load(self.bot, interaction.user)
+        success_embed = discord.Embed(
+            title="Welcome to Snailrace " + interaction.user.name + "!",
+            description=f"Your snail is called **{user.cacheSnail.name} (lvl. {user.cacheSnail.level})** and has the following stats:\n\n```\n{user.cacheSnail.getStatString()}\n```\n",
+            color=discord.Color.green()
+        )
         
         # Send success message
-        await interaction.response.send_message("Successfully initialised user!")
+        await interaction.response.send_message(embed=success_embed)
 
 
         

@@ -5,7 +5,7 @@ import discord
 from uqcsbot import bot
 from uqcsbot.models import Base
 
-from snailrace.snail import CreateSnail
+from snailrace.snail import CreateSnail, GetSnail, SnailraceSnail
 
 STARTING_MONEY = 10
 
@@ -24,6 +24,19 @@ class SnailraceUser(Base):
     races = Column("races", BigInteger, nullable=False)
     wins = Column("wins", BigInteger, nullable=False)
     money = Column("money", BigInteger, nullable=False)
+
+    cacheSnail = None
+
+    def load(self, bot_handle: bot.UQCSBot, user: discord.User):
+        """
+        Loads the user's snail from the database
+        """
+
+        if not self.valid():
+            return
+
+        if self.cacheSnail is None and self.default_snail_id is not None:
+            self.cacheSnail = GetSnail(bot_handle, user, self.default_snail_id)
 
     def valid(self) -> bool:
         """
@@ -79,8 +92,10 @@ def CreateUser(bot_handle: bot.UQCSBot, user: discord.User) -> SnailraceUser | N
     
     # Set the user's default snail
     SetUserDefaultSnail(bot_handle, user, new_snail.id)
+    new_user.default_snail_id = new_snail.id
+    new_user.cacheSnail = new_snail
 
-    return GetUser(bot_handle, user)
+    return new_user
 
 def SetUserDefaultSnail(bot_handle: bot.UQCSBot, user: discord.User, snail_id: int) -> bool:
     """

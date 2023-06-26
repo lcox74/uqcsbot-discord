@@ -61,9 +61,9 @@ class SnailraceSnail(Base):
     _race_position = 0
     _race_last_step = 0
 
-    def initialiseSnailDefaults(self, owner_id: int) -> self:
+    def initialiseSnailDefaults(self, owner_id: int):
         # Create a new user object
-        self.owner_id = user.id
+        self.owner_id = owner_id
         self.created_at = datetime.datetime.now()
         self.mood = SNAIL_MOOD_HAPPY
         self.level = 1
@@ -77,7 +77,7 @@ class SnailraceSnail(Base):
             nouns = noun.readlines()
             self.name = random.choice(adjectives).strip() + "-" + random.choice(nouns).strip()
 
-    def initialiseStarterSnail(self, owner_id: int) -> self:
+    def initialiseStarterSnail(self, owner_id: int):
         self.initialiseSnailDefaults(owner_id)
 
         # Set snail stats
@@ -85,7 +85,7 @@ class SnailraceSnail(Base):
         self.stamina = random.randint(SNAIL_STAT_STARTER_MIN, SNAIL_STAT_STARTER_MAX)
         self.weight = random.randint(SNAIL_STAT_STARTER_MIN, SNAIL_STAT_STARTER_MAX)
 
-    def initialiseHigherSnail(self, owner_id: int) -> self:
+    def initialiseHigherSnail(self, owner_id: int):
         self.initialiseSnailDefaults(owner_id)
 
         # Set snail stats
@@ -93,7 +93,7 @@ class SnailraceSnail(Base):
         self.stamina = random.randint(SNAIL_STAT_HIGHER_MIN, SNAIL_STAT_HIGHER_MAX)
         self.weight = random.randint(SNAIL_STAT_HIGHER_MIN, SNAIL_STAT_HIGHER_MAX)
 
-    def initialiseRandomSnail(self, owner_id: int) -> self:
+    def initialiseRandomSnail(self, owner_id: int):
         self.initialiseSnailDefaults(owner_id)
 
         # Set snail stats
@@ -124,19 +124,25 @@ class SnailraceSnail(Base):
         # Calculate new position
         self._last_step = random.uniform(min_step, max_step)
         self._position = min(self._positionposition + self._last_step, 100)
+    
+    def getStatString(self) -> str:
+        speedStr = "Speed".ljust(9) + f"[{self.speed * '#'}{(SNAIL_STAT_MAX - self.speed) * ' '}]"
+        staminaStr = "Stamina".ljust(9) + f"[{self.stamina * '#'}{(SNAIL_STAT_MAX - self.stamina) * ' '}]"
+        weightStr = "Weight".ljust(9) + f"[{self.weight * '#'}{(SNAIL_STAT_MAX - self.weight) * ' '}]"
+        return f"{speedStr}\n{staminaStr}\n{weightStr}\n"
 
 
-def GetSnail(bot_handle: bot.UQCSBot, user: discord.User) -> SnailraceSnail | None:
+def GetSnail(bot_handle: bot.UQCSBot, user: discord.User, snail_id: int) -> SnailraceSnail | None:
     """
     Gets all snails owned by a user
     """
     
     # Get user from database
     db_session = bot_handle.create_db_session()
-    snails = db_session.query(SnailraceSnail).filter(SnailraceSnail.owner_id == user.id)
+    snail = db_session.query(SnailraceSnail).filter(SnailraceSnail.owner_id == user.id and SnailraceSnail.id == snail_id).first()
     db_session.close()
 
-    return set(snails)
+    return snail
 
 def GetSnails(bot_handle: bot.UQCSBot, user: discord.User) -> set[SnailraceSnail]:
     """
